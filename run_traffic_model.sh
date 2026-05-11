@@ -1,7 +1,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-TRAFFIC_MODEL="$SCRIPT_DIR/cpp/build/traffic_model"
+TRAFFIC_MODEL="$SCRIPT_DIR/traffic_model"
 PARCER="$SCRIPT_DIR/python/parcer.py"
 
 CONFIGS="$1"
