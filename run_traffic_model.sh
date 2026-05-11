@@ -41,5 +41,5 @@ echo "Запуск анализа CSV..."
 python3 "$PARCER" "$CSV"
 if [ $? -ne 0 ]; then
     echo "Ошибка при анализе CSV" >&2
-    exit 5
+    exit 7
 fi
