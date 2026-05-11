@@ -5,8 +5,8 @@
 #include "hdr/traffic.h"
 
 int main(int argc, char* argv[]) {
-    if (argc != 2){
-        std::cerr << "Использование: " << argv[0] << " <input_file>\n";
+    if (argc < 2 || argc > 3){
+        std::cerr << "Использование: " << argv[0] << " <input_file> [output_file]\n";
         return 1;
     }
 
@@ -30,17 +30,23 @@ int main(int argc, char* argv[]) {
         return 4;
     }
 
-    std::unique_ptr<TrafficModel> packets_v;
+    std::unique_ptr<TrafficModel> model;
     try {
-        packets_v = create_traffic_model(model_desc);
+        model = create_traffic_model(model_desc);
     } catch (const std::invalid_argument& e) {
         std::cerr << "Ошибка! " << e.what() << "\n";
         return 5;
     }
 
-    std::ofstream output("output.csv");
-    std::vector<Packet> packets = packets_v->generate(sim_time);
-    for(auto& packet : packets){
-        output << packet.arrival_time << "," << packet.size << "\n";
+    std::string output = (argc == 3) ? argv[2] : "output.csv";
+    std::ofstream ofile(output);
+    if(!ofile.is_open()){
+        std::cerr << "Ошибка! Не удалось открыть файл: " << output << "\n";
+        return 6;
     }
+    std::vector<Packet> packets = model->generate(sim_time);
+    for(auto& packet : packets){
+        ofile << packet.arrival_time << "," << packet.size << "\n";
+    }
+    return 0;
 }
